@@ -56,7 +56,7 @@ def get_parser():
 
 
     parser.add_argument("--dataset", choices=['dbpedia14', 'sst2', 'ag_news', 'yelp', 'imdb'])
-    parser.add_argument("--data-folder", default="/private/home/chuanguo/data/")
+    parser.add_argument("--data-folder", required=True, type=str)
     parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--dump_path", type=str)
     parser.add_argument('--model', type=str, default='bert-base-uncased')
