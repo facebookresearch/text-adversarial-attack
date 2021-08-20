@@ -21,7 +21,7 @@ import torch
 import torch.nn.functional as F
 
 from src.dataset import load_data
-from src.utils import bool_flag, get_output_file, print_args
+from src.utils import bool_flag, get_output_file, print_args, load_gpt2_from_dict
 
 
 def wer(x, y):
@@ -82,7 +82,13 @@ def main(args):
         tokenizer.padding_side = "right"
         tokenizer.pad_token = tokenizer.eos_token
         model.config.pad_token_id = model.config.eos_token_id
-    ref_model = AutoModelForCausalLM.from_pretrained(args.model, output_hidden_states=True).cuda()
+        
+    if 'bert-base-uncase' in args.model:
+        print('CCCCC')
+        # for BERT, load GPT-2 trained on BERT tokenizer
+        ref_model = load_gpt2_from_dict("%s/transformer_wikitext-103.pth" % args.gpt2_checkpoint_folder, output_hidden_states=True).cuda()
+    else:
+        ref_model = AutoModelForCausalLM.from_pretrained(args.model, output_hidden_states=True).cuda()
     with torch.no_grad():
         embeddings = model.get_input_embeddings()(torch.arange(0, tokenizer.vocab_size).long().cuda())
         ref_embeddings = ref_model.get_input_embeddings()(torch.arange(0, tokenizer.vocab_size).long().cuda())
@@ -314,6 +320,8 @@ if __name__ == "__main__":
     # Bookkeeping
     parser.add_argument("--result_folder", default="result/", type=str,
         help="folder for loading trained models")
+    parser.add_argument("--gpt2_checkpoint_folder", default="result/", type=str,
+        help="folder for loading GPT2 model trained with BERT tokenizer")
     parser.add_argument("--adv_samples_folder", default="adv_samples/", type=str,
         help="folder for saving generated samples")
     parser.add_argument("--dump_path", default="", type=str,

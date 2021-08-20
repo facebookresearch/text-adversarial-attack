@@ -26,6 +26,12 @@ python whitebox_attack.py --data_folder <data_dir> --dataset <dataset_name> --mo
 ```
 This runs the GBDA on the first 100 samples from the test set.
 
+### 2.1. Downloading GPT-2 trained on BERT tokenizer (optional)
+To attack a BERT model, GBDA requires a casual language model trained on the BERT tokenizer. We provide a pretrained GPT-2 model for this purpose. Before the attack, please run the following script to download the model from the Amazon S3 bucket:
+```
+s3cmd get s3://dl.fbaipublicfiles.com/text-adversarial-attack/transformer_wikitext-103.pth result/
+```
+
 ## 3. Evaluating transfer attack
 After attacking a model, run the following script to query a target model from the optimized adversarial distribution:
 ```
