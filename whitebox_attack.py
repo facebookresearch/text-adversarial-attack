@@ -84,7 +84,6 @@ def main(args):
         model.config.pad_token_id = model.config.eos_token_id
         
     if 'bert-base-uncase' in args.model:
-        print('CCCCC')
         # for BERT, load GPT-2 trained on BERT tokenizer
         ref_model = load_gpt2_from_dict("%s/transformer_wikitext-103.pth" % args.gpt2_checkpoint_folder, output_hidden_states=True).cuda()
     else:
@@ -154,7 +153,7 @@ def main(args):
             if args.attack_target == "hypothesis":
                 forbidden[:premise_length] = True
             else:
-                forbidden[(premise_length+offset):] = True
+                forbidden[(premise_length-offset):] = True
         forbidden_indices = np.arange(0, len(input_ids))[forbidden]
         forbidden_indices = torch.from_numpy(forbidden_indices).cuda()
         token_type_ids_batch = (None if token_type_ids is None else torch.LongTensor(token_type_ids).unsqueeze(0).repeat(args.batch_size, 1).cuda())
@@ -170,7 +169,7 @@ def main(args):
                     ref_weights = None
             elif args.constraint == 'cosine':
                 # GPT-2 reference model uses last token embedding instead of pooling
-                if args.model == 'gpt2':
+                if args.model == 'gpt2' or 'bert-base-uncased' in args.model:
                     orig_output = orig_output[:, -1]
                 else:
                     orig_output = orig_output.mean(1)
@@ -203,7 +202,7 @@ def main(args):
                 if args.constraint.startswith('bertscore'):
                     ref_loss = -args.lam_sim * bert_score(orig_output, output, weights=ref_weights).mean()
                 else:
-                    if args.model == 'gpt2':
+                    if args.model == 'gpt2' or 'bert-base-uncased' in args.model:
                         output = output[:, -1]
                     else:
                         output = output.mean(1)
