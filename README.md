@@ -29,7 +29,7 @@ This runs the GBDA on the first 100 samples from the test set.
 ### 2.1. Downloading GPT-2 trained on BERT tokenizer (optional)
 To attack a BERT model, GBDA requires a casual language model trained on the BERT tokenizer. We provide a pretrained GPT-2 model for this purpose. Before the attack, please run the following script to download the model from the Amazon S3 bucket:
 ```
-s3cmd get s3://dl.fbaipublicfiles.com/text-adversarial-attack/transformer_wikitext-103.pth result/
+curl https://dl.fbaipublicfiles.com/text-adversarial-attack/transformer_wikitext-103.pth -o transformer_wikitext-103.pth
 ```
 
 ## 3. Evaluating transfer attack
