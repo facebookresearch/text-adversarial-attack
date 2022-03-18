@@ -43,7 +43,7 @@ python evaluate_adv_samples.py --data_folder <data_dir> --dataset <dataset_name>
 Please cite [[1]](https://arxiv.org/abs/2104.13733) if you found the resources in this repository useful.
 
 
-[1] C. Guo *, A. Sablayrolles *, Herve Jegou, Douwe Kiela  [*Gradient-based Adversarial Attacks against Text Transformers*](https://arxiv.org/abs/2104.13733)
+[1] C. Guo *, A. Sablayrolles *, Herve Jegou, Douwe Kiela.  [*Gradient-based Adversarial Attacks against Text Transformers*](https://arxiv.org/abs/2104.13733). EMNLP 2021.
 
 
 ```
