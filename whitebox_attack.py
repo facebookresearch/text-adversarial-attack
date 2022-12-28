@@ -192,7 +192,7 @@ def main(args):
                 top_preds = pred.sort(descending=True)[1]
                 correct = (top_preds[:, 0] == label).long()
                 indices = top_preds.gather(1, correct.view(-1, 1))
-                adv_loss = (pred[:, label] - pred.gather(1, indices) + args.kappa).clamp(min=0).mean()
+                adv_loss = (pred[:, label] - pred.gather(1, indices).squeeze() + args.kappa).clamp(min=0).mean()
             
             # Similarity constraint
             ref_embeds = (coeffs @ ref_embeddings[None, :, :])
